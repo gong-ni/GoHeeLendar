@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고히네 캘린더</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>고히네 캘린더</h1>
+    </header>
+
+    <div id="user-select">
+        <button class="user-btn goeun" data-user="goeun">고은</button>
+        <button class="user-btn heesoo" data-user="heesoo">희수</button>
+    </div>
+
+    <div class="calendar-body">
+        <div id="calendar-header">
+            <button onclick="changeMonth(-1)">&#10094;</button>
+            <h2 id="current-month"></h2>
+            <button onclick="changeMonth(1)">&#10095;</button>
+        </div>
+    
+        <div id="weekdays">
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+            <div>Sun</div>
+        </div>
+    
+        <div id="calendar"></div>
+    </div>
+    <div id="event-form" class="hidden">
+        <div class="modal">
+            <input type="text" id="event-date" readonly disabled>
+            <textarea id="event-name"></textarea>
+            <button id="add-event-btn">추가</button>
+            <button id="close-event-form">취소</button>
+        </div>
+    </div>
+</body>
+</html>
