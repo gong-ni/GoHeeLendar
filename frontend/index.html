@@ -5,7 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>고히네 캘린더</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+    <script type="module" src="./script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+      
+        const firebaseConfig = {
+            apiKey: "AIzaSyCObZHYdZVcfprvo1rYzJ2-yPwQG5BU-uc",
+            authDomain: "goheelendar.firebaseapp.com",
+            projectId: "goheelendar",
+            storageBucket: "goheelendar.appspot.com",
+            messagingSenderId: "942802766321",
+            appId: "1:942802766321:web:a26ad6a03cc016bbae1c50",
+            measurementId: "G-SBGW4XWRDT"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+      
+        window.myFirebase = { db, collection, getDocs, setDoc, doc, deleteDoc };
+      </script>
 </head>
 <body>
     <header>
@@ -19,9 +37,9 @@
 
     <div class="calendar-body">
         <div id="calendar-header">
-            <button onclick="changeMonth(-1)">&#10094;</button>
+            <button id="prev-month">&#10094;</button>
             <h2 id="current-month"></h2>
-            <button onclick="changeMonth(1)">&#10095;</button>
+            <button id="next-month">&#10095;</button>
         </div>
     
         <div id="weekdays">
@@ -36,6 +54,7 @@
     
         <div id="calendar"></div>
     </div>
+
     <div id="event-form" class="hidden">
         <div class="modal">
             <input type="text" id="event-date" readonly disabled>
@@ -44,5 +63,13 @@
             <button id="close-event-form">취소</button>
         </div>
     </div>
+
+    <div id="context-menu" class="hidden">
+        <ul>
+            <li id="edit-event">수정</li>
+            <li id="delete-event">삭제</li>
+        </ul>
+    </div>
+  
 </body>
 </html>
