@@ -66,14 +66,6 @@ header {
     flex-direction: column;
 }
 
-@media (max-width: 768px) {
-    .calendar-body {
-        max-width: 100%;
-        padding: 0 10px;
-        margin: 0 auto;
-    }
-}
-
 #calendar-header {
     display: flex;
     width: 100%;
@@ -132,6 +124,30 @@ header {
     font-weight: 300;
     align-self: flex-start;
 }
+
+/* 100일 단위 강조 */
+.day-100 {
+  background-color: #fff0ff;
+}
+
+/* 매년 5월 17일 강조 */
+.day-anniversary {
+  background-color: #fff0ff;
+}
+
+/* 배지 공통 스타일 */
+.day-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: rgb(255, 56, 56);
+}
+
+.day-container {
+  position: relative;
+}
+
 
 .event {
     font-size: 12px;
@@ -292,3 +308,48 @@ background-color: #eee;
 .hidden {
 display: none !important;
 }
+
+/* mobile */
+@media (max-width: 768px) {
+  * {
+      box-sizing: border-box; /* 패딩과 보더도 사이즈 안에 포함 */
+      margin: 0;
+      padding: 0;
+  }
+
+  #user-select {
+    margin : 0;
+    font-size : 9px;
+  }
+
+  .calendar-body {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid red;
+  }
+
+  .calendar-day {
+    padding : 1px;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .calendar-day .date {
+    font-size: 9px;
+    font-weight: 200;
+    align-self: flex-start;
+    margin: 3px 0px 0px 3px;
+  }
+
+  .day-badge {
+    font-size: 8px;
+  }
+  
+  .event {
+    font-size : 8px;
+  }
+
+
+}
+

@@ -21,6 +21,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  document.addEventListener("touchend", (e) => {
+    if (window.innerWidth > 768) return;
+    else {
+    const cell = e.target.closest(".calendar-day");
+    if (!cell) return;
+
+    e.preventDefault();
+
+    const touch = e.changedTouches[0];
+    const pageX = touch.pageX;
+    const pageY = touch.pageY;
+    const dateStr = cell.dataset.date;
+
+    openContextMenu(pageX, pageY, dateStr);
+    }
+  });
+
   async function fetchEventsFromServer() {
     try {
       const snapshot = await getDocs(collection(db, "events"));
@@ -106,12 +123,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDayOfMonth = new Date(year, month, 1).getDay();
 
+    const baseDate = new Date(2022, 4, 17); // 2022-05-17
+
+    // 빈 칸 채우기
     for (let i = 0; i < (firstDayOfMonth + 6) % 7; i++) {
       const emptyCell = document.createElement("div");
       emptyCell.classList.add("empty-cell");
       calendar.appendChild(emptyCell);
     }
 
+    // 실제 날짜 칸 생성
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
       const dayDiv = document.createElement("div");
@@ -119,12 +140,29 @@ document.addEventListener("DOMContentLoaded", async () => {
       dayDiv.dataset.date = dateStr;
       dayDiv.innerHTML = `<span class='date'>${day}</span>`;
 
-      dayDiv.addEventListener("click", () => openAddEventForm(year, month + 1, day));
-      dayDiv.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        openContextMenu(e.pageX, e.pageY, dateStr);
-      });
+      const thisDate = new Date(year, month, day);
+      const diffDays = Math.floor((thisDate - baseDate) / (1000 * 60 * 60 * 24)) + 1;
 
+      // 100일 단위 강조
+      if (diffDays >= 0 && diffDays % 100 === 0) {
+        dayDiv.classList.add("day-100", "day-container");
+        const badge = document.createElement("div");
+        badge.textContent = `${diffDays}일`;
+        badge.classList.add("day-badge");
+        dayDiv.appendChild(badge);
+      }
+
+      // 매년 5월 17일 강조
+      if (month === 4 && day === 17 && (year > 2022 || (year === 2022 && day >= 17))) {
+        const anniversaryYears = year - 2022;
+        dayDiv.classList.add("day-anniversary", "day-container");
+        const badge = document.createElement("div");
+        badge.textContent = `${anniversaryYears}주년`;
+        badge.classList.add("day-badge");
+        dayDiv.appendChild(badge);
+      }
+
+      // 기존 이벤트 표시
       if (events[dateStr]) {
         events[dateStr].forEach((event, idx) => {
           const eventSpan = document.createElement("div");
@@ -139,9 +177,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
       }
 
+      // 클릭 시 이벤트 폼 띄우기
+      dayDiv.addEventListener("click", () => {
+        const [y, m, d] = dateStr.split("-").map(Number);
+        openAddEventForm(y, m, d);
+      });
+
       calendar.appendChild(dayDiv);
     }
   }
+
 
   function openAddEventForm(year, month, day) {
     document.getElementById("event-date").value = `${year}년 ${month}월 ${day}일`;
